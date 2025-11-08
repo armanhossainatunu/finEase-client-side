@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+* {
+  font-family: "Lora", serif;
+}
+
+.btn-bg {
+  background-color: #875df8;
+  color: white;
+}
+
+.btn-bg:hover {
+  background-color: #7f75eb;
+  transform: translateY(-2);
+}
