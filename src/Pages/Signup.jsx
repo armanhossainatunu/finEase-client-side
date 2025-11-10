@@ -1,23 +1,30 @@
-import { useState } from "react";
-import { FaEye, FaGithub, FaGithubSquare, FaLinkedin } from "react-icons/fa";
+import { useContext, useState } from "react";
+import { FaEye } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FiEyeOff } from "react-icons/fi";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { FaSquareXTwitter } from "react-icons/fa6";
 import signUpVideo from "../assets/signUp.mp4";
+import { AuthContext } from "../Context/AuthContext";
+import Button from "../Components/Button";
 
 const Login = () => {
   const [error, setError] = useState("");
-
   const [show, setShow] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { createUser, updateUser, googleWithLogin, setUser } =
+    useContext(AuthContext);
 
   const handelLogin = (event) => {
     event.preventDefault();
     const form = event.target;
+    const name = form.name.value;
+    const photo = form.photo.value;
     const email = form.email.value;
     const password = form.password.value;
-    // console.log(email, password);
+    console.log(name, photo, email, password);
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
@@ -26,9 +33,15 @@ const Login = () => {
       );
       return;
     }
-    (email, password)
+    createUser(email, password)
       .then((result) => {
         const user = result.user;
+        updateUser({ displayName: name, photoURL: photo }).then(() => {
+          setUser({ ...user, displayName: name, photoURL: photo });
+          navigate("/");
+        }).catch((error) => {
+          console.log(error);
+        })
         console.log(user);
         toast.success("Login Successfully");
 
@@ -43,7 +56,17 @@ const Login = () => {
         }
       });
   };
-  const handleGoogleLogin = () => {};
+  const handleGoogleLogin = () => {
+    googleWithLogin()
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        navigate(location.state?.from || "/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div>
       <div className=" bg-base-200 pt-10 ">
@@ -62,7 +85,9 @@ const Login = () => {
           {/* Login Form */}
           <div className="rounded-xl absolute  bg-transparent w-full max-w-sm shrink-0">
             <form onSubmit={handelLogin} className="card-body">
-              <h1 className="text-center text-white font-bold text-2xl">Sign Up</h1>
+              <h1 className="text-center text-white font-bold text-2xl">
+                Sign Up
+              </h1>
               <fieldset className="fieldset">
                 {/* Name */}
                 <div>
@@ -121,24 +146,23 @@ const Login = () => {
                     {show ? <FaEye></FaEye> : <FiEyeOff></FiEyeOff>}
                   </span>
                 </div>
-                <button type="submit" className="btn btn-bg mt-4">
-                  SignUp
-                </button>
+                 <Button className={'z-50 w-full text-black'}> Signup</Button>
+               
               </fieldset>
             </form>
             <div className="flex w-[90%] mx-auto flex-col">
               <div className="card rounded-box grid  place-items-center"></div>
-              <div className="divider mt-0">OR</div>
+              <div className="divider text-white mt-0">OR</div>
               <div className="card rounded-box grid place-items-center"></div>
             </div>
             <div className="text-center ">
-              <button
+              <Button
                 onClick={handleGoogleLogin}
-                className="btn w-[90%] text-2xl"
+                className="z-50 w-[90%] text-2xl"
               >
                 <FcGoogle />
                 Google
-              </button>
+              </Button>
               {/* <button className="btn">
                 <FaGithub /> Github
               </button> */}

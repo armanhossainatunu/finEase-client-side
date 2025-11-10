@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useContext } from "react";
 import MyContainer from "../Components/MyContainer";
 import Button from "../Components/Button";
+import { AuthContext } from "../Context/AuthContext";
 
 const AddTransaction = () => {
+  const { user } = useContext(AuthContext);
+  const handleAddTransaction = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const amount = form.amount.value;
+    const date = new Date().toLocaleDateString();
+    const email = form.email.value;
+    const category = form.category.value;
+    const type = form.type.value;
+    const description = form.description.value;
+    
+
+    const transaction = {
+      name,
+      amount,
+      category,
+      email,
+      description,
+      type,
+      date,
+      uid: user.uid,
+    };
+    console.log(transaction);
+  };
+
   return (
     <MyContainer className="mt-17">
       <div className=" min-h-screen max-w-lg mx-auto text-center shadow-2xl p-10 border ">
@@ -18,7 +45,7 @@ const AddTransaction = () => {
             />
           </div>
         </div>
-        <form className="mt-10">
+        <form onSubmit={handleAddTransaction} className="mt-10">
           <div className="flex flex-col gap-5">
             {/* Name Field */}
             <div className="w-full">
@@ -30,8 +57,9 @@ const AddTransaction = () => {
               </label>
               <input
                 className="appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
-                id="name"
+                name="name"
                 type="text"
+                defaultValue={user?.displayName}
                 placeholder="Enter name"
               />
             </div>
@@ -46,6 +74,8 @@ const AddTransaction = () => {
               <input
                 className="appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
+                name="email"
+                defaultValue={user?.email}
                 placeholder="Enter email"
               />
             </div>
@@ -59,7 +89,7 @@ const AddTransaction = () => {
               </label>
               <input
                 className="appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
-                id="amount"
+                name="amount"
                 type="number"
                 placeholder="Enter amount"
               />
@@ -81,7 +111,8 @@ const AddTransaction = () => {
                 </label>
                 <input
                   type="radio"
-                  name="radio-4"
+                  name="type"
+                  value="income"
                   className="radio radio-primary"
                   defaultChecked
                 />
@@ -93,7 +124,8 @@ const AddTransaction = () => {
                 </label>
                 <input
                   type="radio"
-                  name="radio-4"
+                  name="type"
+                  value="expense"
                   className="radio radio-primary"
                 />
               </div>
@@ -109,7 +141,7 @@ const AddTransaction = () => {
               </label>
               <input
                 className="appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
-                id="category"
+                name="category"
                 type="text"
                 list="browsers"
                 placeholder="Enter category"
@@ -147,7 +179,7 @@ const AddTransaction = () => {
             </label>
             <textarea
               className="appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
-              id="description"
+              name="description"
               placeholder="Enter description"
             ></textarea>
           </div>

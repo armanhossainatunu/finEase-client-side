@@ -19,3 +19,12 @@
   background-color: #7f75eb;
   transform: translateY(-2);
 }
+/* user item */
+.user-item {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  @apply px-2 py-1 rounded 
+}
+.user-item:hover {
+  background-color: #f1f1f1;
+}

@@ -1,29 +1,32 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaEye, FaGithubSquare, FaLinkedin } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FiEyeOff } from "react-icons/fi";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import loginImg from "../assets/login-img.jpg";
 import loginLogo from "../assets/logo-white.png";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { AuthContext } from "../Context/AuthContext";
+import Button from "../Components/Button";
 
 const Login = () => {
   const [error, setError] = useState("");
   const [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const { user, googleWithLogin } = useContext(AuthContext);
+  const { user, login, googleWithLogin, resetPassword, setLoading } =
+    useContext(AuthContext);
   console.log(user);
   const handelLogin = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
-
-    // console.log(email, password);
+setEmail(email)
+    console.log(email, password);
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
@@ -32,14 +35,14 @@ const Login = () => {
       );
       return;
     }
-    (email, password)
+    setLoading(true);
+    setError("");
+    login(email, password)
       .then((result) => {
         const user = result.user;
         console.log(user);
         toast.success("Login Successfully");
-
-        setLoading(false);
-
+        navigate(location.state || "/");
         form.reset();
       })
       .catch((error) => {
@@ -57,14 +60,26 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
-        
-        navigate("/");
+        navigate(location.state?.from || "/");
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
+  const handleResetPassword = (email) => {
+    resetPassword(email)
+      .then(() => {
+        toast.success("Password Reset Email Sent");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+useEffect(() => {
+setEmail(defaultValue => email)
+
+}, [email]);
   return (
     <div>
       <div className="mx-auto bg-base-200 pt-18 min-h-[85vh]">
@@ -79,7 +94,7 @@ const Login = () => {
             <div className="absolute inset-0 bg-black/50">
               <div className="mt-10 ml-8">
                 <Link to="/" className="text-2xl font-bold text-white">
-                  <img src={loginLogo} alt="" className="w-10" h-5 />
+                  <img src={loginLogo} alt="" className="w-10" />
                 </Link>
                 <h1 className="text-white mt-1.5 font-bold ">
                   Welcome to FinEase
@@ -144,14 +159,49 @@ const Login = () => {
                     {show ? <FaEye></FaEye> : <FiEyeOff></FiEyeOff>}
                   </span>
                 </div>
-                <div>
+
+                {/* You can open the modal using document.getElementById('ID').showModal() method */}
+                <button
+                  type="button"
+                  className="text-start text-sm mt-3 hover:underline"
+                  onClick={() =>
+                    document.getElementById("my_modal_3").showModal()
+                  }
+                >
+                  Forgot password?
+                </button>
+                <dialog id="my_modal_3" className="modal">
+                  <div className="modal-box">
+                    <form method="dialog">
+                      {/* if there is a button in form, it will close the modal */}
+                      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                        ✕
+                      </button>
+                    </form>
+                    <h3 className="font-bold text-lg">Hello!</h3>
+                    <form onSubmit={handleResetPassword}>
+                      <input
+                        type="email"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        placeholder="Email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                        required
+                      />
+                      <div className="flex justify-center mt-5">
+                        <button type="submit" className="btn mx-auto">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+                </dialog>
+
+                {/* <div>
                   <Link className="text-sm hover:underline" to="/auth/forgot">
                     Forgot password?
                   </Link>
-                </div>
-                <button type="submit" className="btn btn-bg mt-4">
-                  SignIn
-                </button>
+                </div> */}
+
+                <Button className={"z-50 w-[90%]"}> Signup</Button>
               </fieldset>
             </form>
             <div className="flex w-[90%] mx-auto flex-col">

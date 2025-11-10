@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import MyLink from "./MyLink";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import MyContainer from "../MyContainer";
 import Button from "../Button";
 import { AuthContext } from "../../Context/AuthContext";
@@ -8,6 +8,7 @@ import { AuthContext } from "../../Context/AuthContext";
 const Navbar = () => {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const { user, loading, logOut } = useContext(AuthContext);
+  const navigate = useNavigate();
   useEffect(() => {
     const html = document.querySelector("html");
     html.setAttribute("data-theme", theme);
@@ -16,14 +17,15 @@ const Navbar = () => {
   const handelTheme = (checked) => {
     setTheme(checked ? "dark" : "light");
   };
-const handleLogOut = () => {
-  logOut()
-    .then(() => {})
-    .catch((error) => {
-      console.log(error);
-    });
-}
-  
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const navItems = (
     <>
@@ -33,20 +35,26 @@ const handleLogOut = () => {
       <li>
         <MyLink to="/about">About</MyLink>
       </li>
-      <li>
-        <MyLink to="/AddTransaction">Add Transaction</MyLink>
-      </li>
-      <li>
-        <MyLink to="/MyTransactions">My Transactions</MyLink>
-      </li>
-      <li>
-        <MyLink to="/Reports">Reports</MyLink>
-      </li>
+      {user ? (
+        <div className="flex flex-col lg:flex-row">
+          <li>
+            <MyLink to="/AddTransaction">Add Transaction</MyLink>
+          </li>
+          <li>
+            <MyLink to="/MyTransactions">My Transactions</MyLink>
+          </li>
+          <li>
+            <MyLink to="/Reports">Reports</MyLink>
+          </li>
+        </div>
+      ) : (
+        ""
+      )}
     </>
   );
 
   return (
-    <div className="bg-base-100  shadow-sm  top-0 left-0 w-full fixed to-0 z-50">
+    <div className="bg-base-100  shadow-sm  top-0 left-0 w-full  to-0 z-50">
       <MyContainer>
         <div className="navbar p-0 ">
           <div className="navbar-start">
@@ -140,24 +148,33 @@ const handleLogOut = () => {
             {loading ? (
               loading
             ) : user ? (
-              <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                  <div className="w-10 rounded-full">
+              <div className="dropdown dropdown-end ">
+                <label
+                  tabIndex={0}
+                  className="btn btn-ghost btn-circle avatar tooltip tooltip-left tooltip-capitalize"
+                  data-tip={user?.displayName || "User"}
+                >
+                  <div className="w-10 z-50 rounded-full ">
                     <img src={user.photoURL} />
                   </div>
                 </label>
                 <ul
                   tabIndex={0}
-                  className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+                  className="menu menu-sm font-normal border dropdown-content mt-3 p-2 shadow-xl bg-base-100 rounded-box w-52"
                 >
+                  <li className="user-item capitalize">{user?.displayName}</li>
+                  <li className="user-item lowercase">{user?.email}</li>
+                  <li className="user-item">
+                    <Link to="/auth/update">Update Profile</Link>
+                  </li>
                   <li>
                     <button onClick={handleLogOut}>Logout</button>
                   </li>
                 </ul>
               </div>
             ) : (
-              <Link to="/auth/login" className=" text-white">
-                <Button> Sign In</Button>
+              <Link to="/auth/login" className="">
+                <Button className='z-40'> Sign In</Button>
               </Link>
             )}
           </div>

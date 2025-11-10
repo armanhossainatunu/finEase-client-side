@@ -7,6 +7,8 @@ import MyTransactions from "../Pages/MyTransactions";
 import AddTransaction from "../Pages/AddTransaction";
 import Reports from "../Pages/Reports ";
 import About from "../Pages/About";
+import UpdateProfile from "../Pages/UpdateProfile";
+import PrivateRoute from "../Context/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +42,18 @@ const router = createBrowserRouter([
       {
         path: "/auth/signup",
         element: <Signup></Signup>,
+      },
+      {
+        path: "/auth/update",
+        element: (
+          <PrivateRoute>
+            <UpdateProfile></UpdateProfile>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "*",
+        element: <h1>404 Not Found</h1>,
       },
     ],
   },
