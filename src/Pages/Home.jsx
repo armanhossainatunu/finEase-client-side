@@ -4,6 +4,7 @@ import Budgeting from "../Components/Budgeting";
 import Stat from "../Components/Stat";
 import Features from "../Components/Features";
 import { useLoaderData } from "react-router";
+import AccountSummary from "../Components/AccountSummary";
 
 const Home = () => {
   const data = useLoaderData();
@@ -12,29 +13,7 @@ const Home = () => {
     <div>
       <Banner></Banner>
       <Budgeting></Budgeting>
-      <div>
-        <h1 className="text-3xl font-bold text-center my-10">Testimonial</h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
-          {data.map((item) => (
-            <div key={item._id} className="card bg-base-100 shadow-xl">
-              <div className="card-body">
-                <p>{item.name}</p>
-                <p>{item.category}</p>
-                
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5 my-10">
-        {data.map((item) => (
-          <div key={item._id} className="card bg-base-100 shadow-xl">
-            <div className="card-body">
-              <p>{item.name}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <AccountSummary></AccountSummary>
       <Features></Features>
       <Stat></Stat>
     </div>

@@ -1,16 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import MyContainer from "../Components/MyContainer";
 import Button from "../Components/Button";
 import { AuthContext } from "../Context/AuthContext";
+import { toast } from "react-toastify";
 
 const AddTransaction = () => {
+  const [date, setDate] = useState('');
   const { user } = useContext(AuthContext);
   const handleAddTransaction = (e) => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value;
     const amount = form.amount.value;
-    const date = new Date().toLocaleDateString();
     const email = form.email.value;
     const category = form.category.value;
     const type = form.type.value;
@@ -26,6 +27,11 @@ const AddTransaction = () => {
       uid: user.uid,
     };
     console.log(transaction);
+    if (!name || !amount || !date || !category || !type || !description) {
+      toast.error("All fields are required");
+      return;
+    }
+    setDate('');
 
     fetch("http://localhost:3000/myTransactions", {
       method: "POST",
@@ -37,10 +43,10 @@ const AddTransaction = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("after post data ", data);
-        // if (data.insertedId) {
-        //   alert("Transaction Added Successfully");
-        //   form.reset();
-        // }
+        if (data.insertedId) {
+          toast.success("Transaction Successfully");
+          form.reset();
+        }
       });
   };
 
@@ -53,9 +59,12 @@ const AddTransaction = () => {
           {/* Date Field */}
           <div>
             <input
-              className="appearance-none border rounded w-full py-2   leading-tight focus:outline-none focus:shadow-outline"
-              id="date"
+              className="appearance-none border rounded w-full py-2 leading-tight focus:outline-none focus:shadow-outline"
+              name="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
               type="date"
+             
             />
           </div>
         </div>
@@ -105,6 +114,7 @@ const AddTransaction = () => {
                 className="appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
                 name="amount"
                 type="number"
+                required
                 placeholder="Enter amount"
               />
             </div>
@@ -115,7 +125,6 @@ const AddTransaction = () => {
             <div className="mt-5">
               <label
                 className="block text-start  font-bold "
-                htmlFor="description"
               >
                 Type
               </label>
@@ -127,8 +136,9 @@ const AddTransaction = () => {
                   type="radio"
                   name="type"
                   value="income"
+                  required
                   className="radio radio-primary"
-                  defaultChecked
+                
                 />
                 <label
                   className="block text-start  font-bold mb-2"
@@ -140,6 +150,7 @@ const AddTransaction = () => {
                   type="radio"
                   name="type"
                   value="expense"
+                  required
                   className="radio radio-primary"
                 />
               </div>
