@@ -54,7 +54,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="bg-base-100  shadow-sm  top-0 left-0 w-full  to-0 z-50">
+    <div className="  shadow-sm  top-0 left-0 w-full  to-0 z-50">
       <MyContainer>
         <div className="navbar p-0 ">
           <div className="navbar-start">
@@ -102,7 +102,7 @@ const Navbar = () => {
                 value="synthwave"
                 className="theme-controller"
                 onChange={(e) => handelTheme(e.target.checked)}
-                defaultChecked={localStorage.getItem("theme")}
+                // defaultChecked={localStorage.getItem("")}
               />
 
               <svg
@@ -160,7 +160,7 @@ const Navbar = () => {
                 </label>
                 <ul
                   tabIndex={0}
-                  className="menu menu-sm font-normal border dropdown-content mt-3 p-2 shadow-xl bg-base-100 rounded-box w-52"
+                  className="menu menu-sm font-normal border dropdown-content mt-3 p-2 shadow-xl bg-base-100 rounded-box w-fit"
                 >
                   <li className="user-item capitalize">{user?.displayName}</li>
                   <li className="user-item lowercase">{user?.email}</li>

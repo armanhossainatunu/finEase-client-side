@@ -15,8 +15,6 @@ const AddTransaction = () => {
     const category = form.category.value;
     const type = form.type.value;
     const description = form.description.value;
-    
-
     const transaction = {
       name,
       amount,
@@ -28,6 +26,22 @@ const AddTransaction = () => {
       uid: user.uid,
     };
     console.log(transaction);
+
+    fetch("http://localhost:3000/myTransactions", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(transaction),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("after post data ", data);
+        // if (data.insertedId) {
+        //   alert("Transaction Added Successfully");
+        //   form.reset();
+        // }
+      });
   };
 
   return (
