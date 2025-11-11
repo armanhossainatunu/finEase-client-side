@@ -165,7 +165,7 @@ const Navbar = () => {
                   <li className="user-item capitalize">{user?.displayName}</li>
                   <li className="user-item lowercase">{user?.email}</li>
                   <li className="user-item">
-                    <Link to="/auth/update">Update Profile</Link>
+                    <Link to="/auth/update">My Profile</Link>
                   </li>
                   <li>
                     <button onClick={handleLogOut}>Logout</button>

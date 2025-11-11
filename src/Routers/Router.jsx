@@ -9,6 +9,7 @@ import Reports from "../Pages/Reports ";
 import About from "../Pages/About";
 import UpdateProfile from "../Pages/UpdateProfile";
 import PrivateRoute from "../Context/PrivateRoute";
+import Update from "../Pages/UpdateTransactions";
 
 const router = createBrowserRouter([
   {
@@ -26,11 +27,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/MyTransactions",
-        element: <MyTransactions></MyTransactions>,
+        element: (
+          <PrivateRoute>
+            <MyTransactions></MyTransactions>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/AddTransaction",
-        element: <AddTransaction></AddTransaction>,
+        element: (
+          <PrivateRoute>
+            <AddTransaction></AddTransaction>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/Reports",
@@ -51,6 +60,15 @@ const router = createBrowserRouter([
             <UpdateProfile></UpdateProfile>
           </PrivateRoute>
         ),
+      },
+      {
+        path: "/update/:id",
+        element: (
+          <PrivateRoute>
+            <Update></Update>
+          </PrivateRoute>
+        ),
+        loader: () => fetch("http://localhost:3000/myTransactions"),
       },
       {
         path: "*",

@@ -17,7 +17,7 @@ const AccountSummary = () => {
   useEffect(() => {
     if (!user) return;
 
-    fetch("http://localhost:3000/myTransactions")
+    fetch(`http://localhost:3000/myTransactions?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("data fetched successfully db", data);
