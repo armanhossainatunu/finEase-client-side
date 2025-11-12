@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import MyContainer from "../Components/MyContainer";
 import { Link } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
+import Button from "../Components/Button";
 
 const MyTransactions = () => {
   const { user } = useContext(AuthContext);
@@ -17,7 +18,7 @@ const MyTransactions = () => {
       .catch((error) => {
         console.log(error);
       });
-  },[user]);
+  }, [user]);
 
   return (
     <MyContainer>
@@ -48,7 +49,10 @@ const MyTransactions = () => {
                   <td>{transaction.date}</td>
                   <td>{transaction.Time}</td>
                   <td>
+                
+                    <Button >
                     <Link to={`/update/${transaction._id}`}>Update</Link>
+                    </Button>
                   </td>
                   <td>
                     <button>Delete</button>

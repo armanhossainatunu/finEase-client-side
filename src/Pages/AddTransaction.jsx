@@ -5,7 +5,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 
 const AddTransaction = () => {
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState("");
   const { user } = useContext(AuthContext);
   const handleAddTransaction = (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ const AddTransaction = () => {
       toast.error("All fields are required");
       return;
     }
-    setDate('');
+    setDate("");
 
     fetch("http://localhost:3000/myTransactions", {
       method: "POST",
@@ -42,7 +42,6 @@ const AddTransaction = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("after post data ", data);
         if (data.insertedId) {
           toast.success("Transaction Successfully");
           form.reset();
@@ -64,7 +63,6 @@ const AddTransaction = () => {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               type="date"
-             
             />
           </div>
         </div>
@@ -123,11 +121,7 @@ const AddTransaction = () => {
             {/* Checkbox Field */}
 
             <div className="mt-5">
-              <label
-                className="block text-start  font-bold "
-              >
-                Type
-              </label>
+              <label className="block text-start  font-bold ">Type</label>
               <div className="flex justify-center items-center rounded gap-5">
                 <label className="block text-start  font-bold" htmlFor="amount">
                   Income
@@ -138,7 +132,6 @@ const AddTransaction = () => {
                   value="income"
                   required
                   className="radio radio-primary"
-                
                 />
                 <label
                   className="block text-start  font-bold mb-2"

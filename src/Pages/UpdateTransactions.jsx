@@ -1,16 +1,57 @@
 import React from "react";
 import { useLoaderData, useParams } from "react-router";
 import MyContainer from "../Components/MyContainer";
+import { toast } from "react-toastify";
 
 const UpdateTransactions = () => {
-  const { _id } = useParams();
   const data = useLoaderData();
-  const transaction = data.find((transaction) => transaction.id === _id);
-  console.log("update transaction", transaction);
+  const { _id } = useParams();
+  const transaction = data.find((transaction) => transaction._id === _id);
+
+  console.log("update clicked", transaction);
+
+  const handleUpdate = (event) => {
+    event.preventDefault();
+
+    const form = event.target;
+    const amount = form.amount.value;
+    const category = form.category.value;
+    const date = form.date.value;
+    const type = form.type.value;
+    const description = form.description.value;
+    const transaction = {
+      amount,
+      category,
+      date,
+      description,
+      type,
+    };
+    if (!amount || !category || !date || !type || !description) {
+      toast.error("All fields are required");
+      return;
+    }
+    console.log(transaction);
+
+    fetch(`http://localhost:3000/myTransactions/update/${_id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(transaction),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        toast.success("Successfully updated!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <MyContainer>
-      <form className="flex flex-col max-w-md mx-auto ">
+      <form onSubmit={handleUpdate} className="flex flex-col max-w-md mx-auto ">
         {/* Checkbox Field */}
         <div className="mt-5">
           <label className="block text-start  font-bold ">Type</label>
@@ -21,7 +62,8 @@ const UpdateTransactions = () => {
             <input
               type="radio"
               name="type"
-              defaultValue={transaction.type === "income"}
+              value="income"
+              defaultChecked={transaction.type === "income"}
               required
               className="radio radio-primary"
             />
@@ -34,7 +76,8 @@ const UpdateTransactions = () => {
             <input
               type="radio"
               name="type"
-              defaultValue={transaction.expense}
+              value="expense"
+              defaultChecked={transaction.type === "expense"}
               required
               className="radio radio-primary"
             />
@@ -115,8 +158,7 @@ const UpdateTransactions = () => {
             className="appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
             name="date"
             type="date"
-            defaultValue={transaction.date}
-            placeholder="Enter date"
+            defaultValue={transaction.date.slice(0, 10) || ""}
           />
         </div>
 
