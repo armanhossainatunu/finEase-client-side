@@ -4,10 +4,11 @@ import Button from "../Components/Button";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import Loading from "../Components/Loading";
 
 const AddTransaction = () => {
   const [date, setDate] = useState("");
-  const { user, setTotalBalance, totalBalance } = useContext(AuthContext);
+  const { user, setTotalBalance, totalBalance,loading } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleAddTransaction = (e) => {
     e.preventDefault();
@@ -74,6 +75,10 @@ const AddTransaction = () => {
         }
       });
   };
+
+  if (loading) {
+    return <div><Loading></Loading></div>;
+  }
 
   return (
     <MyContainer className="mt-17">

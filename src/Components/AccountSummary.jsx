@@ -62,7 +62,7 @@ const AccountSummary = () => {
             <p className="font-bold">
               $ <span>{totalBalance.income}</span>
             </p>
-            <Link to="/income">Income Details</Link>
+            <Link to="/transaction/details">Income Details</Link>
             {/* <Button className="z-10 font-sans">Details</Button> */}
           </div>
           <div className="bg-red-400 text-center space-y-2  rounded py-10">
@@ -70,7 +70,7 @@ const AccountSummary = () => {
             <p className="font-bold">
               $ <span>{totalBalance.expense}</span>
             </p>
-            <Link to="/income" className="hover:border">
+            <Link to="/transaction/details" className="hover:border">
               Expenses Details
             </Link>
           </div>

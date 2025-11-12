@@ -12,11 +12,13 @@ import PrivateRoute from "../Context/PrivateRoute";
 import Update from "../Pages/UpdateTransactions";
 import Errorpage from "../Pages/Errorpage";
 import TransactionDetails from "../Pages/TransactionDetails";
+import Loading from "../Components/Loading";
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: MainLayout,
+    hydrateFallbackElement: <Loading></Loading>,
     children: [
       {
         index: true,
@@ -73,13 +75,13 @@ const router = createBrowserRouter([
         loader: () => fetch("http://localhost:3000/myTransactions"),
       },
       {
-        path: "/transaction/details/:id",
+        path: "/transaction/details",
         element: (
           <PrivateRoute>
             <TransactionDetails></TransactionDetails>
           </PrivateRoute>
         ),
-        loader: () => fetch("http://localhost:3000/myTransactions"),
+       
       },
       {
         path: "*",
