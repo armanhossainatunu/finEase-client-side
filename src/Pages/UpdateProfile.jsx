@@ -27,7 +27,7 @@ const Profile = () => {
         <h1 className="text-2xl font-bold text-center mt-3">
           {user?.displayName}
         </h1>
-        <p className="text-center text-black/40 mb-2.5">{user?.email}</p>
+        <p className="text-center mb-2.5">{user?.email}</p>
         <form onSubmit={handleUpdate} className="flex flex-col gap-4 px-3">
           <input
             type="text"

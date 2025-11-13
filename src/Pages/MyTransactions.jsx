@@ -42,7 +42,7 @@ const MyTransactions = () => {
   }, [user, sort]);
 
   return (
-    <MyContainer>
+    <MyContainer className={'mt-16'}>
       <h1 className="text-2xl font-bold my-5">My Transactions</h1>
 
       {loading ? (
@@ -55,7 +55,7 @@ const MyTransactions = () => {
         <div className="overflow-x-auto">
           <table className="table table-xs">
             <thead>
-              <tr>
+              <tr className="bg-base-200">
                 <th>SN</th>
                 <th>Category</th>
                 <th>

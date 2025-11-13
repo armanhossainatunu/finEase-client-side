@@ -122,9 +122,6 @@ const TransactionDetails = () => {
                 <th>Category</th>
                 <th>Amount</th>
                 <th>Date</th>
-                <th>Time</th>
-                <th>Update</th>
-                <th>Delete</th>
                 <th>Details</th>
               </tr>
             </thead>
@@ -161,11 +158,7 @@ const TransactionDetails = () => {
                         </p>
                       </Button>
                     </td>
-                    <td>
-                      <Button>
-                        <Link to={`/details/${transaction._id}`}>Details</Link>
-                      </Button>
-                    </td>
+                   
                   </tr>
                 ))}
             </tbody>

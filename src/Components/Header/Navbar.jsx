@@ -55,7 +55,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="  shadow-sm  top-0 left-0 w-full  to-0 z-50">
+    <div className="bg-base-300 shadow-sm fixed top-0 left-0 w-full  to-0 z-50">
       <MyContainer>
         <div className="navbar p-0 ">
           <div className="navbar-start">
