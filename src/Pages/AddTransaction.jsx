@@ -48,6 +48,7 @@ const AddTransaction = () => {
     fetch("http://localhost:3000/myTransactions", {
       method: "POST",
       headers: {
+        authorization: `Bearer ${user?.accessToken}`,
         "content-type": "application/json",
       },
       body: JSON.stringify(transaction),

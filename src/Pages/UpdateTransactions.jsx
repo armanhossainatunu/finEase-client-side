@@ -6,10 +6,9 @@ import { toast } from "react-toastify";
 const UpdateTransactions = () => {
   const data = useLoaderData();
   const { _id } = useParams();
-  const transaction = data.find((transaction) => transaction._id === _id);
-
-  console.log("update clicked", transaction);
-
+  console.log(data);
+  console.log(_id);
+  const transaction = data?.find((transaction) => transaction._id === _id);
   const handleUpdate = (event) => {
     event.preventDefault();
 
@@ -30,7 +29,7 @@ const UpdateTransactions = () => {
       toast.error("All fields are required");
       return;
     }
-    console.log(transaction);
+  
 
     fetch(`http://localhost:3000/myTransactions/update/${_id}`, {
       method: "PUT",
@@ -50,7 +49,8 @@ const UpdateTransactions = () => {
   };
 
   return (
-    <MyContainer>
+    <MyContainer className="mt-20">
+      <p className="text-center font-bold text-2xl">Transaction Update</p>
       <form onSubmit={handleUpdate} className="flex flex-col max-w-md mx-auto ">
         {/* Checkbox Field */}
         <div className="mt-5">

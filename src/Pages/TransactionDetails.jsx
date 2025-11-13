@@ -1,33 +1,3 @@
-// import { useContext, useEffect, useState } from "react";
-// import { AuthContext } from "../Context/AuthContext";
-
-// const TransactionDetails = () => {
-//   const { user } = useContext(AuthContext);
-//   const [transactions, setTransactions] = useState([]);
-
-//   console.log(transactions);
-
-//   useEffect(() => {
-//     fetch(`http://localhost:3000/myTransactions?email=${user?.email}`)
-//       .then((res) => res.json())
-//       .then((data) => {
-//         console.log("data fetched successfully my transactions page", data);
-//         setTransactions(data);
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
-//   }, [user]);
-
-//   return (
-//     <div>
-//       <h1>Transaction Details</h1>
-//     </div>
-//   );
-// };
-
-// export default TransactionDetails;
-
 import React, { useContext, useEffect, useState } from "react";
 import MyContainer from "../Components/MyContainer";
 import { Link } from "react-router";
@@ -45,30 +15,32 @@ const TransactionDetails = () => {
 
   // Delete Transaction
   const handelDelete = (id) => {
-    fetch(`http://localhost:3000/transactions/${id}`, {
-      method: "DELETE",
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.deletedCount > 0) {
-          Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              Swal.fire({
-                title: "Deleted!",
-                text: "Your file has been deleted.",
-                icon: "success",
-              });
-            }
-          });
-          setTransactions((prev) => prev.filter((t) => t._id !== id));
+      .then((result) => {
+        if (result.isConfirmed) {
+          fetch(`http://localhost:3000/transactions/${id}`, {
+            method: "DELETE",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.deletedCount > 0) {
+                Swal.fire({
+                  title: "Deleted!",
+                  text: "Your file has been deleted.",
+                  icon: "success",
+                });
+                const remaining = transactions.filter((t) => t._id !== id);
+                setTransactions(remaining);
+              }
+            });
         } else {
           ("failed to delete");
         }
@@ -79,7 +51,13 @@ const TransactionDetails = () => {
   };
   // Fetch Transactions
   useEffect(() => {
-    fetch(`http://localhost:3000/myTransactions?email=${user?.email}`)
+    fetch(`http://localhost:3000/myTransactions?email=${user?.email}`,
+      {
+        headers: {
+          authorization: `Bearer ${user.accessToken}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setTransactions(data);
@@ -94,7 +72,7 @@ const TransactionDetails = () => {
   if (loading) {
     return (
       <MyContainer>
-       <Loading></Loading>
+        <Loading></Loading>
       </MyContainer>
     );
   }
@@ -103,6 +81,16 @@ const TransactionDetails = () => {
   const incomeTransactions = transactions.filter((t) => t.type === "income");
   const expenseTransactions = transactions.filter((t) => t.type === "expense");
 
+  // total income & expense
+  const totalIncome = incomeTransactions.reduce(
+    (acc, t) => acc + Number(t.amount),
+    0
+  );
+  const totalExpense = expenseTransactions.reduce(
+    (acc, t) => acc + Number(t.amount),
+    0
+  );
+  console.log(totalIncome, totalExpense);
   const renderTable = (data, type) => {
     if (data.length === 0) {
       return (
@@ -158,7 +146,6 @@ const TransactionDetails = () => {
                         </p>
                       </Button>
                     </td>
-                   
                   </tr>
                 ))}
             </tbody>
@@ -199,7 +186,7 @@ const TransactionDetails = () => {
       {/* Income Section */}
       <div className="mb-10">
         <h2 className="text-2xl font-semibold text-green-600 mb-2">
-          💰 Income Transactions
+          💰 Income Transactions ${totalIncome}
         </h2>
         {renderTable(incomeTransactions, "Income")}
       </div>
@@ -207,7 +194,7 @@ const TransactionDetails = () => {
       {/* Expense Section */}
       <div>
         <h2 className="text-2xl font-semibold text-red-600 mb-2">
-          💸 Expense Transactions
+          💸 Expense Transactions {totalExpense}
         </h2>
         {renderTable(expenseTransactions, "Expense")}
       </div>
